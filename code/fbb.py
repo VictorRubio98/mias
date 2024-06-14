@@ -19,7 +19,7 @@ parser.add_argument('-v','--var', default=0.99, type=float, help = 'Desired cumm
 parser.add_argument('-d','--dist', default='euc',choices=['euc', 'max', 'cab', 'sqd'], type=str, help = 'Distance used in the KNN')
 parser.add_argument('-k',default=2, type=int, help='Number of neighbors')
 parser.add_argument('-e', '--epsilon', default='baseline', type=str, help='Epsilon (privacy budget) of the desired dataset. If baseline means no differential privacy guarantees.')
-parser.add_argument('-d', '--dataset', type=str, default='geolife', help='Name of the tataset to be used in the attack.')
+parser.add_argument('--dataset', default='geolife', help='Name of the tataset to be used in the attack.')
 opt = parser.parse_args()
 
 
@@ -84,8 +84,14 @@ neg_prob, neg_idx = knn.predict(negative, K)
 
 # Plot resuts
 
-preds = torch.cat([pos_prob, neg_prob]).tolist()
-y_test = torch.cat([positive.labels, negative.labels]).type(torch.uint8).tolist()
+preds = torch.cat([pos_prob, neg_prob])
+y_test = torch.cat([positive.labels, negative.labels]).type(torch.uint8)
+
+all_data = torch.cat([data_positive, data_negative], dim=0)
+results = torch.cat([all_data, torch.cat([preds.unsqueeze(-1), y_test.unsqueeze(-1)], dim=-1)], dim=-1)
+
+preds= preds.tolist()
+y_test = y_test.tolist()
 
 fpr, tpr, threshold = metrics.roc_curve(y_test, preds)
 roc_auc = metrics.auc(fpr, tpr)
@@ -100,7 +106,6 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 
 
-#This works until 10 of each image, not more
 images_pth = os.listdir(f'{data_path}/{epsilon}/images/')
 i = 0
 length = 1 + len(str(K)) + 5 + len(str(n_comp)) + 1 + len(dist_knn) #The length of characters that the image shall have without the _roc_{i}.png
@@ -110,5 +115,8 @@ for pth in images_pth:
     if pth == save_image_name:
         i += 1
 
-print(f'Saving as: {data_path}/{epsilon}/images/k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
+print(f'Saving image as: {data_path}/{epsilon}/images/k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
 plt.savefig(f'{data_path}/{epsilon}/images/k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
+
+print(f'Saving file as: {data_path}/{epsilon}/predictions/k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
+torch.save(results, f'{data_path}/{epsilon}/predictions/k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
