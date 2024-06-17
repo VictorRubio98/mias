@@ -3,10 +3,12 @@ import argparse
 
 import torch
 import sklearn.metrics as metrics
+from sklearn import svm
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 from datasets import SyntheticDataset, TrajectoryDataset
 from knn import PyNN
@@ -20,6 +22,7 @@ parser.add_argument('-d','--dist', default='euc',choices=['euc', 'max', 'cab', '
 parser.add_argument('-k',default=2, type=int, help='Number of neighbors')
 parser.add_argument('-e', '--epsilon', default='baseline', type=str, help='Epsilon (privacy budget) of the desired dataset. If baseline means no differential privacy guarantees.')
 parser.add_argument('--dataset', default='geolife', help='Name of the tataset to be used in the attack.')
+parser.add_argument('-a', '--attack-model', dest='attack_model', default='statistic', choices=['statistic', 'rbfSVM', 'linearSVM'])
 opt = parser.parse_args()
 
 
@@ -69,18 +72,24 @@ negative_pca = pca.apply(data_negative, n_comp)
 synthetic_pca = pca.apply(data_synthetic, n_comp)
 positive_pca = pca.apply(data_positive, n_comp)
 
-# Create the positive, negative and synthetic datasets
-negative = TrajectoryDataset(negative_pca, torch.zeros(len(negative_pca)))
-synthetic = SyntheticDataset(synthetic_pca)
-positive = TrajectoryDataset(positive_pca, torch.ones(len(positive_pca)))
+if opt.attack_model == 'statistic':
+    # Create the positive, negative and synthetic datasets
+    negative = TrajectoryDataset(negative_pca, torch.zeros(len(negative_pca)))
+    synthetic = SyntheticDataset(synthetic_pca)
+    positive = TrajectoryDataset(positive_pca, torch.ones(len(positive_pca)))
 
-# Perform KNN:
+    # Perform KNN:
 
-knn = PyNN(dist_knn)
-knn.fit(synthetic.data)
+    knn = PyNN(dist_knn)
+    knn.fit(synthetic.data)
 
-pos_prob, pos_idx = knn.predict(positive, K)
-neg_prob, neg_idx = knn.predict(negative, K)
+    pos_prob, pos_idx = knn.predict(positive, K)
+    neg_prob, neg_idx = knn.predict(negative, K)
+    
+elif 'SVM' in opt.attack_model:
+    kernel = opt.attack_model.split('SVM')[0]
+    svm.SVC(kernel=kernel, probability=True)
+    
 
 # Plot resuts
 
