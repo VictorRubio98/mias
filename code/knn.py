@@ -76,12 +76,15 @@ class PyNN():
     def predict(self,test:Dataset, k:int = 2):
         distances = torch.LongTensor([])
         idx = torch.IntTensor([])
+        labels = torch.IntTensor([])
         for i, (data, label) in enumerate(test):
             dist, knn_indices = self.kneighbours(data, k=k)
             dist=dist.unsqueeze(0)
             knn_indices = knn_indices.unsqueeze(0)
+            label = label.unsqueeze(0)
+            
             distances = torch.cat([distances, dist], dim=0)
             idx = torch.cat([idx, knn_indices], dim=0)
-        
-        prob  = torch.mean(1- (distances-distances.min()) / (distances.max()-distances.min()), dim=1)
-        return prob, idx
+            labels = torch.cat([labels, label])
+             
+        return distances, idx, labels
