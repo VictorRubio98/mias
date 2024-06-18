@@ -101,10 +101,13 @@ else:
     from torch.utils.data import random_split
     import math
 
-    #Split synthetic dataset training KNN and testing the whole model 
-    synthetic_1, synthetic_2 = random_split(synthetic, [math.ceil(0.5*len(synthetic)), math.floor(0.5*len(synthetic))])
-    negative_train, negative_test = random_split(negative, [math.ceil(0.7*len(negative)), math.floor(0.3*len(negative))]) #negative has to be split into 70-30
-
+    #Split synthetic dataset training KNN and testing the whole model
+    if opt.dataset == 'geolife':
+        #Has to be specific for each dataset
+        synthetic_1, synthetic_2, _ = random_split(synthetic, [math.ceil(0.5*len(synthetic)), math.floor(0.5*len(negative)), len(synthetic)-math.ceil(0.5*len(synthetic))- math.floor(0.5*len(negative))])
+        negative_train, negative_test = random_split(negative, [math.ceil(0.5*len(negative)), math.floor(0.5*len(negative))]) #negative has to be split into 70-30
+        positive_test, _ = random_split(positive, [math.ceil(0.5*len(negative)), len(positive)-math.ceil(0.5*len(negative))])
+    
     training_dataset =TrajectoryDataset(torch.cat([synthetic_2.dataset[synthetic_2.indices], negative_train.dataset[negative_train.indices][0]]), torch.cat([torch.ones(len(synthetic_2)), torch.zeros(len(negative_train))]))
     #half negative half positive
     testing_dataset = TrajectoryDataset(torch.cat([negative_test.dataset[negative_test.indices][0], positive.data]), torch.cat([torch.zeros(len(positive)), torch.ones(len(negative_test))]))
@@ -142,15 +145,21 @@ y_test = y_test.tolist()
 fpr, tpr, threshold = metrics.roc_curve(y_test, preds)
 roc_auc = metrics.auc(fpr, tpr)
 
+i = np.arange(len(tpr)) # index for df
+roc = pd.DataFrame({'fpr' : pd.Series(fpr, index=i),'tpr' : pd.Series(tpr, index = i), '1-fpr' : pd.Series(1-fpr, index = i), 'tf' : pd.Series(tpr - (1-fpr), index = i), 'thresholds' : pd.Series(threshold, index = i)})
+th = roc.iloc[(roc.tf-0).abs().argsort()[:1]]
+print(threshold[th.index])
+print(th.fpr.values[0])
+print(th.tpr.values[0])
 plt.title('Receiver Operating Characteristic')
 plt.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % roc_auc)
+plt.scatter(th.fpr.values[0], th.tpr.values[0], c='r', label = 'Maximum tpr')
 plt.legend(loc = 'lower right')
 plt.plot([0, 1], [0, 1],'r--')
 plt.xlim([0, 1])
 plt.ylim([0, 1])
 plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
-
 
 images_pth = os.listdir(f'{data_path}/{epsilon}/images/')
 i = 0
