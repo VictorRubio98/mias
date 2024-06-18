@@ -34,7 +34,7 @@ epsilon = opt.epsilon
 data_path = f'./data/{opt.dataset}'
 file_path_test = f'{data_path}/test.data'
 file_path_validation = f'{data_path}/val.data'
-file_path_synthetic = f'{data_path}/{epsilon}/gene.data'
+file_path_synthetic = f'{data_path}/epsilon{epsilon}/gene.data'
 file_path_train = f'{data_path}/real.data'
 
 # PCA Variables
@@ -152,7 +152,7 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 
 
-images_pth = os.listdir(f'{data_path}/{epsilon}/images/')
+images_pth = os.listdir(f'{data_path}/images/{epsilon}/')
 i = 0
 length = 1 + len(str(K)) + 5 + len(str(n_comp)) + 1 + len(dist_knn) #The length of characters that the image shall have without the _roc_{i}.png
 images_pth = [pth[0:length] for pth in images_pth]
@@ -161,8 +161,8 @@ for pth in images_pth:
     if pth == save_image_name:
         i += 1
 
-print(f'Saving image as: {data_path}/{epsilon}/images/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
-plt.savefig(f'{data_path}/{epsilon}/images/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
+print(f'Saving image as: {data_path}/images/{epsilon}/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
+plt.savefig(f'{data_path}/images/{epsilon}/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
 
 print(f'Saving file as: {data_path}/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
 torch.save(results, f'{data_path}/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
