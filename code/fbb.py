@@ -148,9 +148,7 @@ roc_auc = metrics.auc(fpr, tpr)
 i = np.arange(len(tpr)) # index for df
 roc = pd.DataFrame({'fpr' : pd.Series(fpr, index=i),'tpr' : pd.Series(tpr, index = i), '1-fpr' : pd.Series(1-fpr, index = i), 'tf' : pd.Series(tpr - (1-fpr), index = i), 'thresholds' : pd.Series(threshold, index = i)})
 th = roc.iloc[(roc.tf-0).abs().argsort()[:1]]
-print(threshold[th.index])
-print(th.fpr.values[0])
-print(th.tpr.values[0])
+
 plt.title('Receiver Operating Characteristic')
 plt.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % roc_auc)
 plt.scatter(th.fpr.values[0], th.tpr.values[0], c='r', label = 'Maximum tpr')
@@ -162,16 +160,16 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 
 images_pth = os.listdir(f'{data_path}/{epsilon}/images/')
+file_path = f'{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_'
 i = 0
-length = 1 + len(str(K)) + 5 + len(str(n_comp)) + 1 + len(dist_knn) #The length of characters that the image shall have without the _roc_{i}.png
+length = len(file_path) #The length of characters that the image shall have without the _roc_{i}.png
 images_pth = [pth[0:length] for pth in images_pth]
-save_image_name = f'k{K}_comp{n_comp}_{dist_knn}'
 for pth in images_pth:
-    if pth == save_image_name:
+    if pth == file_path:
         i += 1
 
-print(f'Saving image as: {data_path}/{epsilon}/images/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
-plt.savefig(f'{data_path}/{epsilon}/images/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_roc_{i}.png')
+print(f'Saving image as: {data_path}/{epsilon}/images/{file_path}roc_{i}.png')
+plt.savefig(f'{data_path}/{epsilon}/images/{file_path}roc_{i}.png')
 
-print(f'Saving file as: {data_path}/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
-torch.save(results, f'{data_path}/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
+print(f'Saving file as: {data_path}/{epsilon}/predictions/{file_path}res_{i}.pt')
+torch.save(results, f'{data_path}/{epsilon}/predictions/{file_path}res_{i}.pt')
