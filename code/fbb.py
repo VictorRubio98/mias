@@ -3,10 +3,13 @@ import argparse
 
 import torch
 import sklearn.metrics as metrics
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 from datasets import SyntheticDataset, TrajectoryDataset
 from knn import PyNN
@@ -20,6 +23,9 @@ parser.add_argument('-d','--dist', default='euc',choices=['euc', 'max', 'cab', '
 parser.add_argument('-k',default=2, type=int, help='Number of neighbors')
 parser.add_argument('-e', '--epsilon', default='baseline', type=str, help='Epsilon (privacy budget) of the desired dataset. If baseline means no differential privacy guarantees.')
 parser.add_argument('--dataset', default='geolife', help='Name of the tataset to be used in the attack.')
+parser.add_argument('-a', '--attack-model', dest='attack_model', default='none', choices=['none', 'rbfSVM', 'linearSVM', 'rf'], type=str, 
+                    help='Attck model to use: - none means using the knn without any other model - rbfSVM: SVM with gaussian Kernel.' + 
+                    ' - linearSVM: SVM with linear kernel. - rf: Random Forest')
 opt = parser.parse_args()
 
 
@@ -92,7 +98,6 @@ if opt.attack_model == 'none':
     
 else:
     from torch.utils.data import random_split
-    import math
 
     #Split synthetic dataset training KNN and testing the whole model
     if opt.dataset == 'geolife':
@@ -137,14 +142,6 @@ y_test = y_test.tolist()
 
 fpr, tpr, threshold = metrics.roc_curve(y_test, preds)
 roc_auc = metrics.auc(fpr, tpr)
-
-i = np.arange(len(tpr)) # index for df
-roc = pd.DataFrame({'fpr' : pd.Series(fpr, index=i),'tpr' : pd.Series(tpr, index = i), '1-fpr' : pd.Series(1-fpr, index = i), 'tf' : pd.Series(tpr - (1-fpr), index = i), 'thresholds' : pd.Series(threshold, index = i)})
-th = roc.iloc[(roc.tf-0).abs().argsort()[:1]]
-
-
-plt.title('Receiver Operating Characteristic')
-plt.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % roc_auc)
 
 i = np.arange(len(tpr)) # index for df
 roc = pd.DataFrame({'fpr' : pd.Series(fpr, index=i),'tpr' : pd.Series(tpr, index = i), '1-fpr' : pd.Series(1-fpr, index = i), 'tf' : pd.Series(tpr - (1-fpr), index = i), 'thresholds' : pd.Series(threshold, index = i)})
