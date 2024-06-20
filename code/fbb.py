@@ -146,10 +146,10 @@ roc_auc = metrics.auc(fpr, tpr)
 i = np.arange(len(tpr)) # index for df
 roc = pd.DataFrame({'fpr' : pd.Series(fpr, index=i),'tpr' : pd.Series(tpr, index = i), '1-fpr' : pd.Series(1-fpr, index = i), 'tf' : pd.Series(tpr - (1-fpr), index = i), 'thresholds' : pd.Series(threshold, index = i)})
 th = roc.iloc[(roc.tf-0).abs().argsort()[:1]]
-
+ths = th.thresholds.values[0]
 plt.title('Receiver Operating Characteristic')
 plt.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % roc_auc)
-plt.scatter(th.fpr.values, th.tpr.values, c='r', label = f'Best threshold: {th.thresholds.values[0]:.2f}')
+plt.scatter(th.fpr.values, th.tpr.values, c='r', label = f'Best threshold: {ths:.2f}')
 
 plt.legend(loc = 'lower right')
 plt.plot([0, 1], [0, 1],'r--')
@@ -159,7 +159,7 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 
 images_pth = os.listdir(f'{data_path}/{epsilon}/images/')
-file_path = f'{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_'
+file_path = f'{opt.attack_model}th_{ths:.2f}_k{K}_comp{n_comp}_{dist_knn}_'
 i = 0
 length = len(file_path) #The length of characters that the image shall have without the _roc_{i}.png
 images_pth = [pth[0:length] for pth in images_pth]
