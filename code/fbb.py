@@ -3,8 +3,6 @@ import argparse
 
 import torch
 import sklearn.metrics as metrics
-from sklearn import svm
-from sklearn.ensemble import RandomForestClassifier
 
 import pandas as pd
 import numpy as np
@@ -12,7 +10,6 @@ import matplotlib.pyplot as plt
 import math
 
 from datasets import SyntheticDataset, TrajectoryDataset
-from knn import PyNN
 from pca import PCA
 from evaluations import *
 from attacks import *
@@ -90,13 +87,11 @@ positive = TrajectoryDataset(positive_pca, torch.ones(len(positive_pca)))
 
 if opt.attack_model == 'none':
     # Perform KNN:
-    all_data,preds,y_test = KNN_attack(dist_knn,synthetic,positive,negative,K)
+    all_data,preds,y_test = KNN_attack(dist_knn,synthetic,positive,negative,K,data_positive,data_negative)
     
 else:
-    from torch.utils.data import random_split
-    import math
 
-    all_data,preds,y_test = SVD_attack(dist_knn,synthetic,positive,negative,K)
+    all_data,preds,y_test = SVD_attack(dist_knn,synthetic,positive,negative,K,data_positive,data_negative,attack_model)
     
     
 # Plot resuts
@@ -133,4 +128,4 @@ print(f'Saving image as: C:/Users/RamonRocaOliver/mias/data/geolife/{epsilon}/im
 print(f'Saving file as: C:/Users/RamonRocaOliver/mias/data/geolife/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
 #torch.save(results, f'C:/Users/RamonRocaOliver/mias/data/geolife/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
 
-PGPlotting(data_path,file_path_synthetic,n_comp,opt.attack_model,dist_knn,positive,negative,K)
+PGPlotting(data_path,file_path_synthetic,n_comp,opt.attack_model,dist_knn,positive,negative,K,data_positive,data_negative,pca,results,epsilon)
