@@ -1,3 +1,7 @@
+import pandas as pd
+import torch
+from attacks import *
+
 def calculatePG(baseline,e_private):
     # Procedure for baseline
     #baseline = torch.load(baseline_results)
@@ -29,7 +33,7 @@ def calculatePG(baseline,e_private):
     print(f"Privacy Gain: {privacy_gain}")
     return torch.tensor(privacy_gain,dtype=float)
 
-def PGPlotting(data_path,file_path_synthetic,n_comp,attack_model,dist_knn,positive,negative,K):
+def PGPlotting(data_path,file_path_synthetic,n_comp,attack_model,dist_knn,positive,negative,K,data_positive,data_negative,pca,results,epsilon):
   epsilons = ['baseline','epsilon100','epsilon70','epsilon50','epsilon20','epsilon10','epsilon5','epsilon0']
   privacy_gain = []
   for epsilon_plot in epsilons:
@@ -39,9 +43,9 @@ def PGPlotting(data_path,file_path_synthetic,n_comp,attack_model,dist_knn,positi
       synthetic_pca = pca.apply(data_synthetic, n_comp)
       synthetic = SyntheticDataset(synthetic_pca)
       if attack_model == 'none':
-          all_data,preds,y_test = KNN_attack(dist_knn,synthetic,positive,negative,K)
+          all_data,preds,y_test = KNN_attack(dist_knn,synthetic,positive,negative,K,data_positive,data_negative)
       else:
-          all_data,preds,y_test = SVD_attack(dist_knn,synthetic,positive,negative,K)
+          all_data,preds,y_test = SVD_attack(dist_knn,synthetic,positive,negative,K,data_positive,data_negative,attack_model)
           
       results_to_compare = torch.cat([all_data, torch.cat([preds.unsqueeze(-1), y_test.unsqueeze(-1)], dim=-1)], dim=-1)
       PG = calculatePG(results,results_to_compare)
