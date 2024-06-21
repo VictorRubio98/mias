@@ -131,25 +131,4 @@ print(f'Saving image as: C:/Users/RamonRocaOliver/mias/data/geolife/{epsilon}/im
 print(f'Saving file as: C:/Users/RamonRocaOliver/mias/data/geolife/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
 #torch.save(results, f'C:/Users/RamonRocaOliver/mias/data/geolife/{epsilon}/predictions/{opt.attack_model}_k{K}_comp{n_comp}_{dist_knn}_res_{i}.pt')
 
-privacy_gain = True # Can be a arg later on.
-
-if privacy_gain: # With respect the selcted epsilon!
-    epsilons = ['baseline','epsilon100','epsilon70','epsilon50','epsilon20','epsilon10','epsilon5','epsilon0']
-    privacy_gain = []
-    for epsilon_plot in epsilons:
-        file_path_synthetic = f'{data_path}/{epsilon_plot}/gene.data'
-        data_synthetic = pd.read_csv(file_path_synthetic, sep=" ", header=None)
-        data_synthetic = torch.unique(torch.Tensor(data_synthetic.values), dim=0)
-        synthetic_pca = pca.apply(data_synthetic, n_comp)
-        synthetic = SyntheticDataset(synthetic_pca)
-        if opt.attack_model == 'none':
-            all_data,preds,y_test = KNN_attack(dist_knn,synthetic,positive,negative,K)
-        else:
-            all_data,preds,y_test = SVD_attack(dist_knn,synthetic,positive,negative,K)
-        
-        results_to_compare = torch.cat([all_data, torch.cat([preds.unsqueeze(-1), y_test.unsqueeze(-1)], dim=-1)], dim=-1)
-        PG = calculatePG(results,results_to_compare)
-        print(f'Privacy gain among {epsilon} and {epsilon_plot} is {PG}!' )
-        privacy_gain.append(PG)
-
-privacy_gain_tensor = torch.tensor(privacy_gain)
+PGPlotting(data_path,file_path_synthetic,n_comp,opt.attack_model,dist_knn,positive,negative,K)
