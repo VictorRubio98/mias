@@ -82,7 +82,6 @@ positive = TrajectoryDataset(positive_pca, torch.ones(len(positive_pca)))
 
 if opt.attack_model == 'none':
     # Perform KNN:
-
     knn = PyNN(dist_knn)
     knn.fit(synthetic.data)
 
@@ -150,7 +149,7 @@ ths = th.thresholds.values[0]
 plt.title('Receiver Operating Characteristic')
 plt.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % roc_auc)
 plt.scatter(th.fpr.values, th.tpr.values, c='r', label = f'Best threshold: {ths:.2f}')
-
+print(f'Optimal threshold at {ths} with fpr: {th.fpr.values[0]:.3f} and tpr: {th.tpr.values[0]:.3f}')
 plt.legend(loc = 'lower right')
 plt.plot([0, 1], [0, 1],'r--')
 plt.xlim([0, 1])
@@ -159,7 +158,7 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 
 images_pth = os.listdir(f'{data_path}/{epsilon}/images/')
-file_path = f'{opt.attack_model}th_{ths:.2f}_k{K}_comp{n_comp}_{dist_knn}_'
+file_path = f'{opt.attack_model}_th_{ths:.4f}_k{K}_comp{n_comp}_{dist_knn}_'
 i = 0
 length = len(file_path) #The length of characters that the image shall have without the _roc_{i}.png
 images_pth = [pth[0:length] for pth in images_pth]

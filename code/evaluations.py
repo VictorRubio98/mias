@@ -5,26 +5,16 @@ import torch
 
 import matplotlib.pyplot as plt
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', default='geolife', help='Name of the tataset to be used in the attack.')
 
-opt = parser.parse_args()
+def calculateAdv(dataset:torch.Tensor, threshold:float)->torch.Tensor:
+    positive_label = dataset[dataset[:, -1] == 1][:, 48]
+    negative_label = dataset[dataset[:, -1] == 0][:, 48]
+    prob_TP = (positive_label > threshold).float().mean().item()
+    prob_FP = (negative_label > threshold).float().mean().item()
+    return (prob_TP - prob_FP)
+    
 
-epsilons = ['baseline','epsilon100','epsilon70','epsilon50','epsilon20','epsilon10','epsilon5','epsilon0']
-privacy_gain = []
-
-for e in epsilons:
-    data_path = f'data/{opt.dataset}'
-    predictions_path = f'{data_path}/{e}/predictions'
-    for file in os.listdir(path=predictions_path):
-        results = torch.load(os.path.join(predictions_path, file))
-        PG = calculatePG(results,results_to_compare)
-        print(f'Privacy gain among {epsilon} and {e} is {PG}!' )
-        privacy_gain.append(PG)
-        break
-    break
-
-def calculatePG(baseline,e_private):
+def calculatePG(baseline, e_private, threshold):
     # Procedure for baseline
     #baseline = torch.load(baseline_results)
     #e_private = torch.load(e_private_results) no need since we work already with tensors.
@@ -54,3 +44,31 @@ def calculatePG(baseline,e_private):
     print(f"E-Private Prob FP: {probFP_e}")
     print(f"Privacy Gain: {privacy_gain}")
     return torch.tensor(privacy_gain,dtype=float)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dataset', default='geolife', help='Name of the tataset to be used in the attack.')
+
+opt = parser.parse_args()
+
+epsilons = ['baseline','epsilon100','epsilon70','epsilon50','epsilon20','epsilon10','epsilon5','epsilon0']
+privacy_gain = []
+max_adv = 0.5
+max_baseline = 'Empty'
+
+for e in epsilons:
+    print(f'Iterating for {e}...')
+    data_path = f'data/{opt.dataset}'
+    predictions_path = f'{data_path}/{e}/predictions'
+    for file in os.listdir(path=predictions_path):            
+        results = torch.load(os.path.join(predictions_path, file))
+        threshold = float(file.split('_')[2])
+        if e == 'baseline':
+            base_adv = calculateAdv(results, threshold)
+            if max_adv < base_adv:
+                max_adv = base_adv
+                max_baseline = file
+                print(f'Found a better basline result with advantadge {max_adv:.2f} and name {max_baseline}')
+        else:
+            e_adv = calculateAdv(results, threshold)
+            PG = max_adv - e_adv
+            print(f'Found privacy gain {PG:.2f} for attacker {file}')
