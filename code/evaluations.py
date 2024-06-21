@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 
 
 def calculateAdv(dataset:torch.Tensor, threshold:float)->torch.Tensor:
-    positive_label = dataset[dataset[:, -1] == 1][:, 48]
-    negative_label = dataset[dataset[:, -1] == 0][:, 48]
-    prob_TP = (positive_label > threshold).float().mean().item()
-    prob_FP = (negative_label > threshold).float().mean().item()
+    positive_label = dataset[dataset[:, -1] == 1][:, -2]
+    negative_label = dataset[dataset[:, -1] == 0][:, -2]
+    prob_TP = (positive_label >= threshold).float().mean().item()
+    prob_FP = (negative_label >= threshold).float().mean().item()
     return (prob_TP - prob_FP)
     
 
@@ -52,7 +52,7 @@ opt = parser.parse_args()
 
 epsilons = ['baseline','epsilon100','epsilon70','epsilon50','epsilon20','epsilon10','epsilon5','epsilon0']
 privacy_gain = []
-max_adv = 0.5
+max_adv = 0
 max_baseline = 'Empty'
 
 for e in epsilons:
@@ -72,3 +72,4 @@ for e in epsilons:
             e_adv = calculateAdv(results, threshold)
             PG = max_adv - e_adv
             print(f'Found privacy gain {PG:.2f} for attacker {file}')
+    break
