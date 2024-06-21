@@ -14,6 +14,8 @@ import math
 from datasets import SyntheticDataset, TrajectoryDataset
 from knn import PyNN
 from pca import PCA
+from evaluations import *
+from attacks import *
 
 from pathlib import Path
 
