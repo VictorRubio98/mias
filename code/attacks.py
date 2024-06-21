@@ -1,6 +1,13 @@
-######################### ATTACKS #########################
+from knn import PyNN
+import torch
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
+import sklearn.metrics as metrics
+from torch.utils.data import random_split
+import math
+from datasets import SyntheticDataset, TrajectoryDataset
 
-def KNN_attack(dist_knn,synthetic,positive,negative,K):
+def KNN_attack(dist_knn,synthetic,positive,negative,K,data_positive,data_negative):
     knn = PyNN(dist_knn)
     knn.fit(synthetic.data)
 
@@ -15,12 +22,12 @@ def KNN_attack(dist_knn,synthetic,positive,negative,K):
     return torch.cat([data_positive, data_negative], dim=0),preds,y_test
 
 
-def SVD_attack(dist_knn,synthetic,positive,negative,K):
+def SVD_attack(dist_knn,synthetic,positive,negative,K,data_positive,data_negative,attack_model):
     #Split synthetic dataset training KNN and testing the whole model 
     synthetic_1, synthetic_2 = random_split(synthetic, [math.ceil(0.5*len(synthetic)), math.floor(0.5*len(synthetic))])
     negative_train, negative_test = random_split(negative, [math.ceil(0.7*len(negative)), math.floor(0.3*len(negative))]) #negative has to be split into 70-30
 
-    training_dataset =TrajectoryDataset(torch.cat([synthetic_2.dataset[synthetic_2.indices], negative_train.dataset[negative_train.indices][0]]), torch.cat([torch.ones(len(synthetic_2)), torch.zeros(len(negative_train))]))
+    training_dataset = TrajectoryDataset(torch.cat([synthetic_2.dataset[synthetic_2.indices], negative_train.dataset[negative_train.indices][0]]), torch.cat([torch.ones(len(synthetic_2)), torch.zeros(len(negative_train))]))
     #half negative half positive
     testing_dataset = TrajectoryDataset(torch.cat([negative_test.dataset[negative_test.indices][0], positive.data]), torch.cat([torch.zeros(len(positive)), torch.ones(len(negative_test))]))
     
@@ -30,10 +37,10 @@ def SVD_attack(dist_knn,synthetic,positive,negative,K):
     
     # Predict knn for synthetic data and real data (We know this is a 0)
     train_dist, train_idx, train_labels = knn.predict(training_dataset, K)
-    if 'SVM' in opt.attack_model:
-        kernel = opt.attack_model.split('SVM')[0]
+    if 'SVM' in attack_model:
+        kernel =attack_model.split('SVM')[0]
         model = svm.SVC(kernel=kernel, probability=True)
-    if 'rf' in opt.attack_model:
+    if 'rf' in attack_model:
         model = RandomForestClassifier(n_estimators=100,random_state=0)
     #Train model
 
