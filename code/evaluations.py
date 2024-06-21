@@ -3,13 +3,13 @@ def calculatePG(baseline,e_private):
     #baseline = torch.load(baseline_results)
     #e_private = torch.load(e_private_results) no need since we work already with tensors.
     
-    baseline_p_label = baseline[baseline[:, 49] == 1][:, 48]
-    baseline_n_label = baseline[baseline[:, 49] == 0][:, 48]
+    baseline_p_label = baseline[baseline[:, -1] == 1][:, -2]
+    baseline_n_label = baseline[baseline[:, -1] == 0][:, -2]
     decision_threshold = (baseline_p_label.mean() + baseline_n_label.mean()) / 2
     
     # Procedure for e-private
-    e_private_p_label = e_private[e_private[:, 49] == 1][:, 48]
-    e_private_n_label = e_private[e_private[:, 49] == 0][:, 48]
+    e_private_p_label = e_private[e_private[:, -1] == 1][:, -2]
+    e_private_n_label = e_private[e_private[:, -1] == 0][:, -2]
     decision_threshold_e = (e_private_p_label.mean() + e_private_n_label.mean()) / 2
     
     # Calculate probabilities for baseline
