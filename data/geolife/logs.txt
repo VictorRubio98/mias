@@ -1,0 +1,90 @@
+Loading data...
+Number of components for a variance of 0.9999 is: 48
+Probability of False Positives: 0.25030580163002014
+Probability of True Positives: 0.2742857038974762
+Saving file as: ./data/geolife/epsilon50/predictions/0.0240_rf_k10_comp48_max__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 48
+Probability of False Positives: 0.24373088777065277
+Probability of True Positives: 0.27885714173316956
+Saving file as: ./data/geolife/epsilon50/predictions/0.0351_rf_k11_comp48_max__0.pt
+Loading data...
+Number of components for a variance of 0.99 is: 46
+Probability of False Positives: 0.4797142744064331
+Probability of True Positives: 0.5198776721954346
+Saving file as: ./data/geolife/epsilon50/predictions/0.0402_none_k1000_comp46_euc__2.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 46
+Probability of False Positives: 0.693730890750885
+Probability of True Positives: 0.7194285988807678
+Saving file as: ./data/geolife/epsilon5/predictions/0.0257_rf_k10_comp46_max__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 46
+Probability of False Positives: 0.7032110095024109
+Probability of True Positives: 0.7348571419715881
+Saving file as: ./data/geolife/epsilon5/predictions/0.0316_rf_k11_comp46_max__0.pt
+Loading data...
+Number of components for a variance of 0.99 is: 13
+Probability of False Positives: 0.49085715413093567
+Probability of True Positives: 0.509327232837677
+Saving file as: ./data/geolife/epsilon5/predictions/0.0185_none_k1000_comp13_euc__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 45
+Probability of False Positives: 0.6071865558624268
+Probability of True Positives: 0.6017143130302429
+Saving file as: ./data/geolife/epsilon10/predictions/-0.0055_rf_k10_comp45_max__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 45
+Probability of False Positives: 0.6105504631996155
+Probability of True Positives: 0.5782856941223145
+Saving file as: ./data/geolife/epsilon10/predictions/-0.0323_rf_k11_comp45_max__0.pt
+Loading data...
+Number of components for a variance of 0.99 is: 10
+Probability of False Positives: 0.5220000147819519
+Probability of True Positives: 0.47798165678977966
+Saving file as: ./data/geolife/epsilon10/predictions/-0.0440_none_k1000_comp10_euc__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 48
+Probability of False Positives: 0.7114678621292114
+Probability of True Positives: 0.7754285931587219
+Saving file as: ./data/geolife/epsilon20/predictions/0.0640_rf_k10_comp48_max__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 48
+Probability of False Positives: 0.7090213894844055
+Probability of True Positives: 0.8045714497566223
+Saving file as: ./data/geolife/epsilon20/predictions/0.0956_rf_k11_comp48_max__0.pt
+Loading data...
+Number of components for a variance of 0.99 is: 27
+Probability of False Positives: 0.4877142906188965
+Probability of True Positives: 0.5117737054824829
+Saving file as: ./data/geolife/epsilon20/predictions/0.0241_none_k1000_comp27_euc__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 48
+Probability of False Positives: 0.6469419002532959
+Probability of True Positives: 0.7405714392662048
+Saving file as: ./data/geolife/epsilon70/predictions/0.0936_rf_k10_comp48_max__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 48
+Probability of False Positives: 0.6645259857177734
+Probability of True Positives: 0.7394285798072815
+Saving file as: ./data/geolife/epsilon70/predictions/0.0749_rf_k11_comp48_max__0.pt
+Loading data...
+Number of components for a variance of 0.99 is: 27
+Probability of False Positives: 0.4708571434020996
+Probability of True Positives: 0.5292049050331116
+Saving file as: ./data/geolife/epsilon70/predictions/0.0583_none_k1000_comp27_euc__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 47
+Probability of False Positives: 0.6634556651115417
+Probability of True Positives: 0.6628571152687073
+Saving file as: ./data/geolife/epsilon100/predictions/-0.0006_rf_k10_comp47_max__0.pt
+Loading data...
+Number of components for a variance of 0.9999 is: 47
+Probability of False Positives: 0.6668195724487305
+Probability of True Positives: 0.666857123374939
+Saving file as: ./data/geolife/epsilon100/predictions/0.0000_rf_k11_comp47_max__0.pt
+Loading data...
+Number of components for a variance of 0.99 is: 13
+Probability of False Positives: 0.48514285683631897
+Probability of True Positives: 0.5149847269058228
+Saving file as: ./data/geolife/epsilon100/predictions/0.0298_none_k1000_comp13_euc__0.pt
