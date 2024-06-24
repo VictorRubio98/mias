@@ -11,8 +11,8 @@ def calculateAdv(dataset:torch.Tensor)->float:
     negative_label = dataset[dataset[:, -1] == 0][:, -2]
     prob_TP = (positive_label == 1).float().mean().item()
     prob_FP = (negative_label == 1).float().mean().item()
-    print(f'Probability of False Positives: {prob_FP}')
-    print(f'Probability of True Positives: {prob_TP}')
+    # print(f'Probability of False Positives: {prob_FP}')
+    # print(f'Probability of True Positives: {prob_TP}')
     return (prob_TP - prob_FP)
 
 def calculateAffected(dataset:torch.Tensor)->float:
@@ -75,7 +75,7 @@ if __name__ =='__main__':
 
     opt = parser.parse_args()
 
-    epsilons = ['baseline','epsilon100','epsilon70','epsilon50','epsilon20','epsilon10','epsilon5','epsilon0']
+    epsilons = ['baseline','epsilon20','epsilon40','epsilon50']
     privacy_gain = []
     max_adv = 0
     max_baseline = 'Empty'
@@ -87,7 +87,7 @@ if __name__ =='__main__':
         for file in os.listdir(path=predictions_path):            
             results = torch.load(os.path.join(predictions_path, file))
             if e == 'baseline':
-                base_adv = calculateAdv(results, 0.5)
+                base_adv = calculateAdv(results)
                 if max_adv < base_adv:
                     max_adv = base_adv
                     max_baseline = file
@@ -96,4 +96,3 @@ if __name__ =='__main__':
                 e_adv = calculateAdv(results)
                 PG = max_adv - e_adv
                 print(f'Found privacy gain {PG:.2f} for attacker {file}')
-        break
