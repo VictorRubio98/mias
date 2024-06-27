@@ -1,0 +1,28 @@
+0, 1, 2, 3, 4, 5,
+20, 0.74, 0.72, 0.72, 0.72, 0.75, 0.70, 
+40, 0.71, 0.74, 0.73, 0.73, 0.74, 0.74,
+50, 0.77, 0.70, 0.73, 0.73, 0.71, 0.72,
+
+
+Iterating for epsilon20...
+Found privacy gain 0.74 for attacker -0.1076_rbfSVM_k3000_comp48_max_0.pt
+Found privacy gain 0.72 for attacker -0.0879_none_k3000_comp48_euc_0.pt
+Found privacy gain 0.72 for attacker -0.0814_none_k3000_comp48_cab_0.pt
+Found privacy gain 0.72 for attacker -0.0878_rbfSVM_k3000_comp48_cab_0.pt
+Found privacy gain 0.75 for attacker -0.1133_none_k3000_comp48_max_0.pt
+Found privacy gain 0.70 for attacker -0.0635_rbfSVM_k3000_comp48_euc_0.pt
+Iterating for epsilon40...
+Found privacy gain 0.71 for attacker -0.0799_rbfSVM_k3000_comp48_cab_0.pt
+Found privacy gain 0.74 for attacker -0.1019_rbfSVM_k3000_comp48_euc_0.pt
+Found privacy gain 0.73 for attacker -0.0925_none_k3000_comp48_euc_0.pt
+Found privacy gain 0.73 for attacker -0.1008_none_k3000_comp48_cab_0.pt
+Found privacy gain 0.74 for attacker -0.1064_none_k3000_comp48_max_0.pt
+Found privacy gain 0.74 for attacker -0.1038_rbfSVM_k3000_comp48_max_0.pt
+Iterating for epsilon50...
+Found privacy gain 0.77 for attacker -0.1389_rbfSVM_k3000_comp48_max_0.pt
+Found privacy gain 0.70 for attacker -0.0686_rbfSVM_k3000_comp48_max_0.pt
+Found privacy gain 0.73 for attacker -0.0928_none_k3000_comp48_max_0.pt
+Found privacy gain 0.73 for attacker -0.0970_none_k3000_comp48_cab_0.pt
+Found privacy gain 0.71 for attacker -0.0788_rbfSVM_k3000_comp48_euc_0.pt
+Found privacy gain 0.77 for attacker -0.1409_rbfSVM_k3000_comp48_cab_0.pt
+Found privacy gain 0.72 for attacker -0.0873_none_k3000_comp48_euc_0.pt
